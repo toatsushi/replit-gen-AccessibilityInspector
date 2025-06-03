@@ -1,14 +1,26 @@
+from dotenv import load_dotenv
+load_dotenv()
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from accessibility_checker import AccessibilityChecker
-from ai_evaluator import AIEvaluator
-from report_generator import ReportGenerator
-from wcag_criteria import WCAG_CRITERIA
+from src.accessibility_checker import AccessibilityChecker
+from src.ai_evaluator import AIEvaluator
+from src.report_generator import ReportGenerator
+from src.wcag_criteria import WCAG_CRITERIA
 import json
 from datetime import datetime
 import base64
+import traceback
+
+AI_ASSESSMENT_FEATURE_FLAG = False  # AI-Powered Assessment機能のON/OFF切り替え
+
+WCAG_LEVEL_TAGS = {
+    "A": "wcag2a",
+    "AA": "wcag2aa",
+    "AAA": "wcag2aaa"
+}
 
 def main():
     st.set_page_config(
@@ -30,18 +42,21 @@ def main():
         
         # WCAG Version selection
         wcag_version = st.selectbox(
-            "WCAG Version",
-            ["2.2", "2.1", "2.0"],
+            "WCAG Version (※ 2.1のみサポート)",
+            ["2.1", "2.2 (未サポート)", "2.0 (未サポート)"],
             index=0,
-            help="Choose the WCAG version for evaluation standards"
+            help="現在サポートされているのはWCAG 2.1のみです。2.0, 2.2は未サポートです。"
         )
         
         # AI Provider selection
-        ai_provider = st.selectbox(
-            "AI Provider for Manual Assessment",
-            ["OpenAI (GPT-4o)", "Anthropic (Claude)"],
-            help="Choose the AI provider for evaluating manual assessment criteria"
-        )
+        if AI_ASSESSMENT_FEATURE_FLAG:
+            ai_provider = st.selectbox(
+                "AI Provider for Manual Assessment",
+                ["OpenAI (GPT-4o)", "Anthropic (Claude)"],
+                help="Choose the AI provider for evaluating manual assessment criteria"
+            )
+        else:
+            ai_provider = None
         
         # WCAG Level selection
         wcag_levels = st.multiselect(
@@ -54,7 +69,10 @@ def main():
         # Testing options
         st.subheader("Testing Options")
         include_automated = st.checkbox("Automated Testing (axe-core)", value=True)
-        include_manual = st.checkbox("AI-Powered Manual Assessment", value=True)
+        if AI_ASSESSMENT_FEATURE_FLAG:
+            include_manual = st.checkbox("AI-Powered Manual Assessment", value=True)
+        else:
+            include_manual = False
         
         if not include_automated and not include_manual:
             st.error("Please select at least one testing method")
@@ -72,7 +90,16 @@ def main():
     
     with col2:
         st.subheader("Analysis")
-        analyze_button = st.button("🔍 Analyze Website", type="primary", use_container_width=True)
+        # 2.1以外が選択された場合はボタンを無効化
+        wcag_version_supported = (wcag_version == "2.1")
+        analyze_button = st.button(
+            "🔍 Analyze Website",
+            type="primary",
+            use_container_width=True,
+            disabled=not (include_automated or include_manual) or len(wcag_levels) == 0 or not wcag_version_supported
+        )
+        if not wcag_version_supported:
+            st.warning("現在サポートされているのはWCAG 2.1のみです。2.0, 2.2は未サポートです。")
     
     if analyze_button and url:
         if not url.startswith(('http://', 'https://')):
@@ -89,7 +116,10 @@ def main():
             progress_bar.progress(10)
             
             checker = AccessibilityChecker()
-            ai_evaluator = AIEvaluator(provider=ai_provider.split()[0].lower())
+            if AI_ASSESSMENT_FEATURE_FLAG and ai_provider:
+                ai_evaluator = AIEvaluator(provider=ai_provider.split()[0].lower())
+            else:
+                ai_evaluator = None
             report_generator = ReportGenerator()
             
             results = {
@@ -106,22 +136,22 @@ def main():
                 status_text.text("Running automated accessibility tests...")
                 progress_bar.progress(30)
                 
-                automated_results = checker.run_axe_core_analysis(url)
+                automated_results = checker.run_axe_core_analysis(url, wcag_levels=wcag_levels)
+                
                 results['automated_results'] = automated_results
                 
                 st.success(f"Automated testing completed: {len(automated_results.get('violations', []))} violations found")
             
             # Manual assessment with AI
-            if include_manual:
+            if include_manual and AI_ASSESSMENT_FEATURE_FLAG and ai_evaluator:
                 status_text.text("Running AI-powered manual assessment...")
                 progress_bar.progress(60)
-                
-                # Get page content for AI analysis
                 page_content = checker.get_page_content(url)
                 manual_results = ai_evaluator.evaluate_manual_criteria(page_content, wcag_levels, wcag_version)
                 results['manual_results'] = manual_results
-                
                 st.success(f"AI-powered assessment completed for {len(manual_results)} criteria")
+            else:
+                results['manual_results'] = None
             
             status_text.text("Generating comprehensive report...")
             progress_bar.progress(90)
@@ -136,7 +166,9 @@ def main():
             display_results(results, report)
             
         except Exception as e:
-            st.error(f"Error during analysis: {str(e)}")
+            print(e)
+            traceback.print_exc()
+            raise Exception(f"Error during axe-core analysis: {str(e)}")
             progress_bar.empty()
             status_text.empty()
     
@@ -185,7 +217,7 @@ def display_results(results, report):
         st.metric("Automated Issues", total_issues, delta=None)
     
     with col2:
-        manual_results = results.get('manual_results', {})
+        manual_results = results.get('manual_results') or {}
         manual_issues = sum(1 for criteria in manual_results.values() if criteria.get('status') == 'fail')
         st.metric("Manual Assessment Issues", manual_issues, delta=None)
     
