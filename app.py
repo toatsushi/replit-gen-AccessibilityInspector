@@ -30,6 +30,14 @@ def main():
         initial_sidebar_state="expanded"
     )
     
+    # Initialize session state variables if not already present
+    if 'results' not in st.session_state:
+        st.session_state.results = None
+    if 'report' not in st.session_state:
+        st.session_state.report = None
+    if 'report_generator' not in st.session_state:
+        st.session_state.report_generator = None
+
     st.title("♿ WCAG Accessibility Evaluator")
     st.markdown("""
     This tool provides comprehensive web accessibility evaluation combining automated axe-core testing 
@@ -162,8 +170,15 @@ def main():
             progress_bar.progress(100)
             status_text.text("Analysis complete!")
             
+            # Store results in session state
+            st.session_state.results = results
+            st.session_state.report = report
+            st.session_state.report_generator = report_generator
+
             # Display results
-            display_results(results, report, report_generator)
+            # Using session state here ensures consistency if display_results is ever called
+            # from outside this immediate analysis block in the future.
+            display_results(st.session_state.results, st.session_state.report, st.session_state.report_generator)
             
         except Exception as e:
             print(e)
@@ -171,9 +186,13 @@ def main():
             raise Exception(f"Error during axe-core analysis: {str(e)}")
             progress_bar.empty()
             status_text.empty()
+    elif st.session_state.report is not None:
+        # This handles reruns where results already exist in session state
+        # (e.g., after a download button click or other widget interaction)
+        display_results(st.session_state.results, st.session_state.report, st.session_state.report_generator)
     
-    # Display example or help information
-    if not url:
+    # Display example or help information only if no URL is entered and no report is in session
+    if not url and st.session_state.report is None:
         st.markdown("---")
         st.subheader("How it works")
         
