@@ -163,7 +163,7 @@ def main():
             status_text.text("Analysis complete!")
             
             # Display results
-            display_results(results, report)
+            display_results(results, report, report_generator)
             
         except Exception as e:
             print(e)
@@ -203,7 +203,7 @@ def main():
             - Actionable improvement suggestions
             """)
 
-def display_results(results, report):
+def display_results(results, report, report_generator):
     """Display the analysis results in a comprehensive format"""
     
     st.markdown("---")
@@ -271,15 +271,19 @@ def display_results(results, report):
         col1, col2 = st.columns(2)
         
         with col1:
-            if st.button("📥 Download JSON Report"):
-                json_str = json.dumps(report, indent=2, ensure_ascii=False)
-                b64 = base64.b64encode(json_str.encode()).decode()
-                href = f'<a href="data:application/json;base64,{b64}" download="accessibility_report.json">Download JSON Report</a>'
-                st.markdown(href, unsafe_allow_html=True)
+            # Prepare data for JSON download first
+            json_str = json.dumps(report, indent=2, ensure_ascii=False)
+            # Then display the download button
+            st.download_button(
+                label="📥 Download JSON Report",
+                data=json_str,
+                file_name="accessibility_report.json",
+                mime="application/json",
+            )
         
         with col2:
             if st.button("📄 Download HTML Report"):
-                html_report = generate_html_report(report)
+                html_report = report_generator.export_report(report, format_type='html')
                 b64 = base64.b64encode(html_report.encode()).decode()
                 href = f'<a href="data:text/html;base64,{b64}" download="accessibility_report.html">Download HTML Report</a>'
                 st.markdown(href, unsafe_allow_html=True)
@@ -376,40 +380,6 @@ def display_full_report(report):
         return
     
     st.json(report)
-
-def generate_html_report(report):
-    """Generate an HTML version of the accessibility report"""
-    html_template = f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Accessibility Report</title>
-        <style>
-            body {{ font-family: Arial, sans-serif; margin: 40px; }}
-            .header {{ background: #f8f9fa; padding: 20px; border-radius: 8px; }}
-            .violation {{ background: #fff5f5; border-left: 4px solid #dc3545; padding: 15px; margin: 10px 0; }}
-            .pass {{ background: #f0fff4; border-left: 4px solid #28a745; padding: 15px; margin: 10px 0; }}
-            .warning {{ background: #fffbf0; border-left: 4px solid #ffc107; padding: 15px; margin: 10px 0; }}
-        </style>
-    </head>
-    <body>
-        <div class="header">
-            <h1>Web Accessibility Report</h1>
-            <p><strong>URL:</strong> {report.get('meta', {}).get('url', 'Unknown')}</p>
-            <p><strong>Generated:</strong> {report.get('meta', {}).get('timestamp', 'Unknown')}</p>
-            <p><strong>WCAG Version:</strong> {report.get('meta', {}).get('wcag_version', '2.1')}</p>
-            <p><strong>Compliance Score:</strong> {report.get('compliance_score', 0)}%</p>
-        </div>
-        
-        <h2>Summary</h2>
-        <p>This report provides a comprehensive analysis of web accessibility compliance.</p>
-        
-        <h2>Detailed Results</h2>
-        <pre>{json.dumps(report, indent=2, ensure_ascii=False)}</pre>
-    </body>
-    </html>
-    """
-    return html_template
 
 if __name__ == "__main__":
     main()
