@@ -28,6 +28,14 @@ def main():
     with st.sidebar:
         st.header("Configuration")
         
+        # WCAG Version selection
+        wcag_version = st.selectbox(
+            "WCAG Version",
+            ["2.2", "2.1", "2.0"],
+            index=0,
+            help="Choose the WCAG version for evaluation standards"
+        )
+        
         # AI Provider selection
         ai_provider = st.selectbox(
             "AI Provider for Manual Assessment",
@@ -89,7 +97,8 @@ def main():
                 'timestamp': datetime.now().isoformat(),
                 'automated_results': None,
                 'manual_results': None,
-                'wcag_levels': wcag_levels
+                'wcag_levels': wcag_levels,
+                'wcag_version': wcag_version
             }
             
             # Automated testing with axe-core
@@ -109,7 +118,7 @@ def main():
                 
                 # Get page content for AI analysis
                 page_content = checker.get_page_content(url)
-                manual_results = ai_evaluator.evaluate_manual_criteria(page_content, wcag_levels)
+                manual_results = ai_evaluator.evaluate_manual_criteria(page_content, wcag_levels, wcag_version)
                 results['manual_results'] = manual_results
                 
                 st.success(f"AI-powered assessment completed for {len(manual_results)} criteria")

@@ -8,6 +8,7 @@ WCAG_CRITERIA = {
         "id": "1.1.1",
         "title": "Non-text Content",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "All non-text content that is presented to the user has a text alternative that serves the equivalent purpose.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -25,6 +26,7 @@ WCAG_CRITERIA = {
         "id": "1.2.1", 
         "title": "Audio-only and Video-only (Prerecorded)",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "For prerecorded audio-only and prerecorded video-only media, alternatives are provided.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """

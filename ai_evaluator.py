@@ -24,24 +24,27 @@ class AIEvaluator:
         else:
             raise ValueError("Provider must be either 'openai' or 'anthropic'")
     
-    def evaluate_manual_criteria(self, page_content: Dict[str, Any], wcag_levels: List[str]) -> Dict[str, Any]:
+    def evaluate_manual_criteria(self, page_content: Dict[str, Any], wcag_levels: List[str], wcag_version: str = "2.1") -> Dict[str, Any]:
         """
         Evaluate manual accessibility criteria using AI
         
         Args:
             page_content: Dictionary containing page content and structure
             wcag_levels: List of WCAG levels to evaluate (A, AA, AAA)
+            wcag_version: WCAG version to use (2.0, 2.1, 2.2)
             
         Returns:
             Dictionary containing evaluation results for each criteria
         """
         results = {}
         
-        # Filter criteria by requested WCAG levels
+        # Filter criteria by requested WCAG levels and version
         criteria_to_evaluate = {
             criteria_id: criteria_data 
             for criteria_id, criteria_data in WCAG_CRITERIA.items()
-            if criteria_data['level'] in wcag_levels and criteria_data['requires_manual_assessment']
+            if (criteria_data['level'] in wcag_levels and 
+                criteria_data['requires_manual_assessment'] and
+                wcag_version in criteria_data.get('versions', ['2.0', '2.1', '2.2']))
         }
         
         for criteria_id, criteria_data in criteria_to_evaluate.items():
@@ -166,7 +169,7 @@ Please evaluate this page against WCAG criteria {criteria_id} and provide your a
                 max_tokens=2000
             )
             
-            return response.choices[0].message.content
+            return response.choices[0].message.content or ""
             
         except Exception as e:
             raise Exception(f"OpenAI evaluation failed: {str(e)}")
@@ -187,7 +190,11 @@ Please evaluate this page against WCAG criteria {criteria_id} and provide your a
                 ]
             )
             
-            return response.content[0].text
+            content = response.content[0]
+            if hasattr(content, 'text'):
+                return content.text
+            else:
+                return str(content)
             
         except Exception as e:
             raise Exception(f"Anthropic evaluation failed: {str(e)}")
