@@ -282,11 +282,15 @@ def display_results(results, report, report_generator):
             )
         
         with col2:
-            if st.button("📄 Download HTML Report"):
-                html_report = report_generator.export_report(report, format_type='html')
-                b64 = base64.b64encode(html_report.encode()).decode()
-                href = f'<a href="data:text/html;base64,{b64}" download="accessibility_report.html">Download HTML Report</a>'
-                st.markdown(href, unsafe_allow_html=True)
+            # Prepare data for HTML download first
+            html_report = report_generator.export_report(report, format_type='html')
+            # Then display the download button
+            st.download_button(
+                label="📄 Download HTML Report",
+                data=html_report,
+                file_name="accessibility_report.html",
+                mime="text/html",
+            )
 
 def display_automated_results(automated_results):
     """Display automated testing results from axe-core"""
