@@ -42,7 +42,8 @@ WCAG_CRITERIA = {
     "1.2.2": {
         "id": "1.2.2",
         "title": "Captions (Prerecorded)",
-        "level": "A", 
+        "level": "A",
+        "versions": ["2.0", "2.1", "2.2"], 
         "description": "Captions are provided for all prerecorded audio content in synchronized media.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -59,6 +60,7 @@ WCAG_CRITERIA = {
         "id": "1.3.1",
         "title": "Info and Relationships", 
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Information, structure, and relationships conveyed through presentation can be programmatically determined.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -76,6 +78,7 @@ WCAG_CRITERIA = {
         "id": "1.3.2",
         "title": "Meaningful Sequence",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "When the sequence in which content is presented affects its meaning, a correct reading sequence can be programmatically determined.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -91,7 +94,8 @@ WCAG_CRITERIA = {
     "1.3.3": {
         "id": "1.3.3",
         "title": "Sensory Characteristics",
-        "level": "A", 
+        "level": "A",
+        "versions": ["2.0", "2.1", "2.2"], 
         "description": "Instructions provided for understanding and operating content do not rely solely on sensory characteristics.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -109,6 +113,7 @@ WCAG_CRITERIA = {
         "id": "1.4.1",
         "title": "Use of Color",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Color is not used as the only visual means of conveying information.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -125,6 +130,7 @@ WCAG_CRITERIA = {
         "id": "1.4.3",
         "title": "Contrast (Minimum)",
         "level": "AA",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Text has a contrast ratio of at least 4.5:1 (3:1 for large text).",
         "requires_manual_assessment": False,  # Can be automated
         "evaluation_guidelines": """
@@ -140,6 +146,7 @@ WCAG_CRITERIA = {
         "id": "2.1.1",
         "title": "Keyboard",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "All functionality is available from a keyboard.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -156,6 +163,7 @@ WCAG_CRITERIA = {
         "id": "2.1.2", 
         "title": "No Keyboard Trap",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "If keyboard focus can be moved to a component, it can be moved away using only keyboard.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -172,6 +180,7 @@ WCAG_CRITERIA = {
         "id": "2.2.1",
         "title": "Timing Adjustable", 
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Users can turn off, adjust, or extend time limits.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -188,6 +197,7 @@ WCAG_CRITERIA = {
         "id": "2.2.2",
         "title": "Pause, Stop, Hide",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Users can pause, stop, or hide moving, blinking, or auto-updating information.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -203,7 +213,8 @@ WCAG_CRITERIA = {
     "2.4.1": {
         "id": "2.4.1",
         "title": "Bypass Blocks",
-        "level": "A", 
+        "level": "A",
+        "versions": ["2.0", "2.1", "2.2"], 
         "description": "Mechanism is available to bypass blocks of content repeated on multiple pages.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -220,6 +231,7 @@ WCAG_CRITERIA = {
         "id": "2.4.2",
         "title": "Page Titled",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Pages have titles that describe topic or purpose.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -236,6 +248,7 @@ WCAG_CRITERIA = {
         "id": "2.4.3", 
         "title": "Focus Order",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Components receive focus in an order that preserves meaning and operability.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -252,6 +265,7 @@ WCAG_CRITERIA = {
         "id": "2.4.4",
         "title": "Link Purpose (In Context)",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Purpose of each link can be determined from link text or context.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -268,6 +282,7 @@ WCAG_CRITERIA = {
         "id": "2.4.6",
         "title": "Headings and Labels",
         "level": "AA",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Headings and labels describe topic or purpose.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -284,6 +299,7 @@ WCAG_CRITERIA = {
         "id": "3.1.1",
         "title": "Language of Page",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Default human language of page can be programmatically determined.",
         "requires_manual_assessment": False,  # Can be automated
         "evaluation_guidelines": """
@@ -299,6 +315,7 @@ WCAG_CRITERIA = {
         "id": "3.1.2", 
         "title": "Language of Parts",
         "level": "AA",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Human language of each passage can be programmatically determined.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -315,6 +332,7 @@ WCAG_CRITERIA = {
         "id": "3.2.1",
         "title": "On Focus",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Receiving focus does not initiate a change of context.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -331,6 +349,7 @@ WCAG_CRITERIA = {
         "id": "3.2.2",
         "title": "On Input", 
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Changing input settings does not automatically cause change of context.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -347,6 +366,7 @@ WCAG_CRITERIA = {
         "id": "3.3.1",
         "title": "Error Identification",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "If input error is detected, item in error is identified and error described in text.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -362,7 +382,8 @@ WCAG_CRITERIA = {
     "3.3.2": {
         "id": "3.3.2",
         "title": "Labels or Instructions",
-        "level": "A", 
+        "level": "A",
+        "versions": ["2.0", "2.1", "2.2"], 
         "description": "Labels or instructions are provided when content requires user input.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """
@@ -379,6 +400,7 @@ WCAG_CRITERIA = {
         "id": "4.1.1",
         "title": "Parsing",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Content implemented using markup languages has complete start/end tags and proper nesting.",
         "requires_manual_assessment": False,  # Can be automated
         "evaluation_guidelines": """
@@ -395,6 +417,7 @@ WCAG_CRITERIA = {
         "id": "4.1.2", 
         "title": "Name, Role, Value",
         "level": "A",
+        "versions": ["2.0", "2.1", "2.2"],
         "description": "Name, role, value can be programmatically determined for UI components.",
         "requires_manual_assessment": True,
         "evaluation_guidelines": """

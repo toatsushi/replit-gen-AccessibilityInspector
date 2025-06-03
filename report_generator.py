@@ -39,7 +39,7 @@ class ReportGenerator:
         return {
             'url': results.get('url', 'Unknown'),
             'timestamp': results.get('timestamp', datetime.now().isoformat()),
-            'wcag_version': '2.1',
+            'wcag_version': results.get('wcag_version', '2.1'),
             'levels_tested': results.get('wcag_levels', ['A', 'AA']),
             'testing_methods': {
                 'automated': results.get('automated_results') is not None,
@@ -166,7 +166,7 @@ class ReportGenerator:
             total = compliance[level]['total']
             if total > 0:
                 compliance[level]['compliance_rate'] = round(
-                    (compliance[level]['pass'] / total) * 100, 1
+                    (compliance[level]['pass'] / total) * 100
                 )
         
         return compliance

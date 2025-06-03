@@ -363,8 +363,9 @@ def generate_html_report(report):
     <body>
         <div class="header">
             <h1>Web Accessibility Report</h1>
-            <p><strong>URL:</strong> {report.get('url', 'Unknown')}</p>
-            <p><strong>Generated:</strong> {report.get('timestamp', 'Unknown')}</p>
+            <p><strong>URL:</strong> {report.get('meta', {}).get('url', 'Unknown')}</p>
+            <p><strong>Generated:</strong> {report.get('meta', {}).get('timestamp', 'Unknown')}</p>
+            <p><strong>WCAG Version:</strong> {report.get('meta', {}).get('wcag_version', '2.1')}</p>
             <p><strong>Compliance Score:</strong> {report.get('compliance_score', 0)}%</p>
         </div>
         
